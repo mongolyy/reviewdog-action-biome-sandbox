@@ -1,4 +1,4 @@
-name: reviewdog new option
+name: reviewdog multi option
 on: [pull_request]
 jobs:
   biome:
