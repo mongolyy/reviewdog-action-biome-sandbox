@@ -1,0 +1,18 @@
+{
+	"name": "reviewdog-action-biome-sandbox",
+	"version": "1.0.0",
+	"description": "Test for reviewdog-action-biome",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mongolyy/reviewdog-action-biome-sandbox.git"
+	},
+	"author": "mongolyy",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mongolyy/reviewdog-action-biome-sandbox/issues"
+	},
+	"homepage": "https://github.com/mongolyy/reviewdog-action-biome-sandbox#readme",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4"
+	}
+}
