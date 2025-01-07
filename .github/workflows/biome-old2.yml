@@ -1,4 +1,4 @@
-name: reviewdog old version
+name: reviewdog old version 2
 on: [pull_request]
 jobs:
   biome:
@@ -9,7 +9,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: mongolyy/reviewdog-action-biome@feature/79_fix-bug
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
