@@ -1,4 +1,4 @@
-name: reviewdog
+name: reviewdog old version 2
 on: [pull_request]
 jobs:
   biome:
@@ -9,8 +9,8 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: mongolyy/reviewdog-action-biome@feature/change-fail-level-default
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
-          fail_on_error: true
+          reviewdog_flags: '-fail-on-error=true'
