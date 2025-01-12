@@ -9,7 +9,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@feature/79_fix-bug
+      - uses: mongolyy/reviewdog-action-biome@v1.8.0
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
