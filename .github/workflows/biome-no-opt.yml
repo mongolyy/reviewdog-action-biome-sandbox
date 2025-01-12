@@ -9,7 +9,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@feature/add-fail-level-at-suggester
+      - uses: mongolyy/reviewdog-action-biome@feature/change-fail-level-default
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
