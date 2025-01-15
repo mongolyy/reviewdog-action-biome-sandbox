@@ -1,1 +1,1 @@
-[a a, ++b, ] = test;
+const foo = [1, 23];
