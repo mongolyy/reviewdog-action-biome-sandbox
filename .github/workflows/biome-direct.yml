@@ -1,0 +1,20 @@
+name: biome-direct
+on: [pull_request]
+jobs:
+  biome-direct:
+    name: Lint changed files
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - name: Run Biome on Changed Files
+        run:
+          biome ci --formatter-enabled=true --organize-imports-enabled=true --linter-enabled=true $(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.base.sha }})
