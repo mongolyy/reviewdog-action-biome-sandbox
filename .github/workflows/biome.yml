@@ -1,16 +1,21 @@
-name: reviewdog
+name: biome-with-reviewdog
 on: [pull_request]
 jobs:
-  biome:
-    name: runner / Biome
+  biome-reviewdog:
+    name: Check format for changed files
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
       - uses: mongolyy/reviewdog-action-biome@v1
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          fail_on_error: true
+          reporter: github-check
+          level: info
+          biome_flags: --formatter-enabled=true --organize-imports-enabled=true --linter-enabled=true .
+          filter_mode: nofilter
+          fail_level: any
