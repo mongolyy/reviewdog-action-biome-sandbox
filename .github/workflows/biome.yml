@@ -12,5 +12,5 @@ jobs:
       - uses: mongolyy/reviewdog-action-biome@feature/43_add-comments
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review-next
+          reporter: github-pr-review
           fail_level: error
