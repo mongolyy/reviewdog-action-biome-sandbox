@@ -1,16 +1,27 @@
 name: reviewdog
-on: [pull_request]
+'on':
+  pull_request:
+    branches:
+        - main
+        - development-p2
+        - release/**
+    types: [opened, synchronize, reopened]
 jobs:
-  biome:
-    name: runner / Biome
+  linting-frontend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
       - uses: mongolyy/reviewdog-action-biome@v1
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          fail_on_error: true
+          fail_level: error
+          reporter: github-check
+          filter_mode: added
