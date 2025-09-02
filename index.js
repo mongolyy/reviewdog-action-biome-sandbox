@@ -1,1 +1,1 @@
-[a a, ++b, ] = test;
+[a a, ++b,     ] = test;
