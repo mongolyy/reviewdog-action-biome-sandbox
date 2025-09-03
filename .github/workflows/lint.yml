@@ -1,16 +1,19 @@
-name: reviewdog
+name: Lint
 on: [pull_request]
 jobs:
-  biome:
-    name: runner / Biome
+  lint:
+    name: 👸 Lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: oven-sh/setup-bun@v1
+      - name: 📦 Install dependencies
+        run: bun install
+      - uses: mongolyy/reviewdog-action-biome@v2
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
-          fail_on_error: true
+          fail_level: error
