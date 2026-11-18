@@ -1,15 +1,53 @@
-name: reviewdog
+# Compare fail_on_error deprecation warnings for
+# https://github.com/mongolyy/reviewdog-action-biome/issues/86
+# Fix under test: mongolyy/reviewdog-action-biome#232
+# (branch fix/issue-86-fail-on-error-warning @ 0302bf948e9856fdbb37a1dc155428e4bfa63daf)
+name: issue-86 fail_on_error warning check
 on: [pull_request]
 jobs:
-  biome:
-    name: runner / Biome
+  # Baseline: current main still forwards fail_on_error to action-suggester
+  # when the caller sets only fail_level.
+  baseline-main-fail-level-only:
+    name: main / fail_level only (expect deprecation warning)
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: mongolyy/reviewdog-action-biome@main
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          fail_level: any
+
+  # Fix branch: same inputs. The suggester deprecation warning should be gone.
+  fix-fail-level-only:
+    name: fix branch / fail_level only (expect no fail_on_error warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          fail_level: any
+
+  # Compatibility: an explicit fail_on_error should still fail the job when
+  # Biome reports errors, and action-suggester should still run.
+  # A deprecation warning for this explicit input is acceptable.
+  fix-fail-on-error-explicit:
+    name: fix branch / fail_on_error set (compat; warning expected)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
