@@ -19,6 +19,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-a
           fail_level: any
 
   # Fix branch: same inputs. The suggester deprecation warning should be gone.
@@ -34,6 +35,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-b
           fail_level: any
 
   # Compatibility: an explicit fail_on_error should still fail the job when
@@ -51,6 +53,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-c
           fail_on_error: true
 
   # Passing cases: biome_flags limits the check to clean/, which has no
@@ -67,6 +70,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-d
           fail_level: error
           biome_flags: clean
 
@@ -82,6 +86,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-e
           fail_level: error
           biome_flags: clean
 
@@ -97,6 +102,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-f
           fail_on_error: true
           biome_flags: clean
 
@@ -112,4 +118,5 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-g
           biome_flags: clean
