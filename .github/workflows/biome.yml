@@ -1,16 +1,122 @@
-name: reviewdog
+# Compare fail_on_error deprecation warnings for
+# https://github.com/mongolyy/reviewdog-action-biome/issues/86
+# Fix under test: mongolyy/reviewdog-action-biome#232
+# (branch fix/issue-86-fail-on-error-warning @ 0302bf948e9856fdbb37a1dc155428e4bfa63daf)
+name: issue-86 fail_on_error warning check
 on: [pull_request]
 jobs:
-  biome:
-    name: runner / Biome
+  # Baseline: current main still forwards fail_on_error to action-suggester
+  # when the caller sets only fail_level.
+  baseline-main-fail-level-only:
+    name: main / fail_level only (expect deprecation warning)
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+      - uses: mongolyy/reviewdog-action-biome@main
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
+          tool_name: biome-a
+          fail_level: any
+
+  # Fix branch: same inputs. The suggester deprecation warning should be gone.
+  fix-fail-level-only:
+    name: fix branch / fail_level only (expect no fail_on_error warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-b
+          fail_level: any
+
+  # Compatibility: an explicit fail_on_error should still fail the job when
+  # Biome reports errors, and action-suggester should still run.
+  # A deprecation warning for this explicit input is acceptable.
+  fix-fail-on-error-explicit:
+    name: fix branch / fail_on_error set (compat; warning expected)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-c
           fail_on_error: true
+
+  # Passing cases: biome_flags limits the check to clean/, which has no
+  # lint or format violations. Jobs A-C above still check the whole tree.
+  clean-main-fail-level-error:
+    name: main / clean / fail_level error (expect success + suggester warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@main
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-d
+          fail_level: error
+          biome_flags: clean
+
+  clean-fix-fail-level-error:
+    name: fix branch / clean / fail_level error (expect success, no warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-e
+          fail_level: error
+          biome_flags: clean
+
+  clean-fix-fail-on-error:
+    name: fix branch / clean / fail_on_error set (expect success, action warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-f
+          fail_on_error: true
+          biome_flags: clean
+
+  clean-fix-defaults:
+    name: fix branch / clean / defaults (expect success, no warning)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@fix/issue-86-fail-on-error-warning
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          tool_name: biome-g
+          biome_flags: clean
